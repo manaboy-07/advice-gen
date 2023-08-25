@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+/** @format */
+
+import Advice from "./Advice";
+import React, { useState } from "react";
+import axios from "axios";
+import "./App.css";
 
 function App() {
+  const [advice, setAdvice] = useState({
+    slip: {
+      id: 54,
+      advice: "",
+    },
+  });
+  const [loading, setLoading] = useState(false);
+  const BASE_URL = "https://api.adviceslip.com/advice";
+  const FETCH_ADVICE = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(BASE_URL);
+
+      setAdvice(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleFetch = () => {
+    FETCH_ADVICE();
+  };
+  console.log(advice);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Advice handleFetch={handleFetch} Advice={advice} loading={loading} />
     </div>
   );
 }
